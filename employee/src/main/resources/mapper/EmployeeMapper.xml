@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lpf.www.mapper.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="com.lpf.www.entities.Employee">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userID"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="emp_degree_name" jdbcType="VARCHAR" property="empDegreeName"/>
+        <result column="create_time" jdbcType="DATE" property="createTime"/>
+        <result column="update_time" jdbcType="DATE" property="updateTime"/>
+        <result column="deleted" jdbcType="INTEGER" property="deleted"/>
+    </resultMap>
+    <insert id="addEmployee" useGeneratedKeys="true" keyProperty="id" parameterType="map">
+        insert into employee(id, emp_name, user_id, sex, age, dept_name, emp_degree_name, create_time, deleted)
+        values (#{id}, #{empName}, #{userID}, #{sex}, #{age}, #{deptName}, #{empDegreeName}, now(), 0)
+    </insert>
+    <delete id="deleteEmployee" parameterType="int">
+        delete
+        from employee
+        where id = #{id, jdbcType=INTEGER}
+    </delete>
+    <update id="updateEmployee" parameterType="employee">
+        update employee
+        set emp_name       = #{empName},
+            user_id        = #{userID},
+            sex            = #{sex},
+            age=#{age},
+            dept_name=#{deptName},
+            emp_degree_name=#{empDegreeName},
+            update_time=now()
+        where id = #{id, jdbcType=INTEGER}
+    </update>
+    <select id="searchEmployee" parameterType="int" resultMap="BaseResultMap">
+        select * from employee
+        <where>
+            <if test="emp_name!=null">id=#{id}</if>
+            and deleted=0
+        </where>
+    </select>
+    <select id="searchEmployeeByPage" parameterType="map" resultMap="BaseResultMap">
+        select id,emp_name,sex,age,dept_name,emp_degree_name from employee
+        <where>
+            <if test="empName!=null and empName!=''">and emp_name=#{empName}</if>
+            <if test="deptName!=null and deptName!='' ">and dept_name=#{deptName}</if>
+            <if test="empDegreeName!=null and empDegreeName!=''">and emp_degree_name=#{empDegreeName}</if>
+            and deleted=0
+        </where>
+
+    </select>
+</mapper>

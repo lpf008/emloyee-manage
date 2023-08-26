@@ -1,0 +1,4 @@
+jwt:
+  token:
+    token-expiration: 120
+    token-sign-key: lpf123456
